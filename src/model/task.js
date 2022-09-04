@@ -1,7 +1,7 @@
 // const validator = require("validator");
 const mongoose = require("mongoose");
 
-const taskModel = mongoose.Schema({
+const taskSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
@@ -13,7 +13,9 @@ const taskModel = mongoose.Schema({
     }
 });
 
-const Task = mongoose.model("Task", taskModel);
+// taskSchema.pre("save")
+
+const Task = mongoose.model("Task", taskSchema);
 
 // const task1 = new Task({
 //     description: "Do your work",
