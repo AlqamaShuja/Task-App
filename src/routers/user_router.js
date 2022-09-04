@@ -3,10 +3,11 @@ const User = require("../model/user");
 const router = new express.Router();
 
 router.post("/users", async (req, res) => {
-    const user = new User(req.body);
     try {
+        const user = new User(req.body);
         await user.save();
-        res.status(201).send(user);
+        const token = await user.generateAuthToken();
+        res.status(201).send({ user, token });
     }
     catch (error) {
         res.status(400);
@@ -86,8 +87,12 @@ router.delete("/users/:id", async (req, res) => {
 
 router.post("/users/login", async (req, res) => {
     try {
+        console.log("User");
         const user = await User.findByCredentials(req.body.email, req.body.password);
-        res.send(user);
+        const token = await user.generateAuthToken();
+        console.log("token");
+
+        res.send({ user, token });
     } catch (error) {
         res.status(400).send(error);
     }
