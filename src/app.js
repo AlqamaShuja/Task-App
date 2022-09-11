@@ -9,6 +9,14 @@ const app = express();
 const port = process.env.port || 3000;
 
 
+// Middlewares
+// app.use((req, res, next) => {
+//     if (req.method === "GET") {
+//         res.status(503).send("Sever is on maintainance, Please check it later.");
+//     } else {
+//         next();
+//     }
+// });
 // convert json to object
 app.use(express.json());
 
