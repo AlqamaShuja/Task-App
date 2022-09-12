@@ -4,6 +4,8 @@ require("./db/mongoose");
 // const Task = require("./model/task");
 const userRouter = require("./routers/user_router");
 const taskRouter = require("./routers/task_router");
+const Task = require("./model/task");
+const User = require("./model/user");
 
 const app = express();
 const port = process.env.port || 3000;
@@ -32,6 +34,18 @@ app.listen(port, (req, res) => {
     console.log("Server is Running on " + port);
 });
 
+
+
+const main = async (req, res) => {
+    // const task = await Task.findById("631f3e84dcd3e34bddd6eb1a");
+    // await task.populate("owner");
+    // console.log(task.owner);
+    const user = await User.findById("631f3e06982195576d70f6fe");
+    await user.populate("tasks");
+    // console.log(user.tasks)
+}
+
+// main()
 
 // npm i bcryptjs
 // npm i jsonwebtoken
