@@ -1,4 +1,5 @@
 const express = require("express");
+const multer = require("multer");
 const User = require("../model/user");
 const router = new express.Router();
 const auth = require("../middleware/auth");
@@ -121,5 +122,54 @@ router.post("/users/logoutAll", auth, async (req, res) => {
     }
 });
 
+const upload = multer({
+    // dest: 'avatars',
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.toLowerCase().match(/\.(png|jpg|jpeg)/)) {
+            return cb(new Error("Image must be png, jpg or jpeg Format"));
+        }
+        cb(undefined, true)
+    }
+});
+
+router.post("/users/me/avatar", auth, upload.single("avatar"), async (req, res) => {
+    req.user.avatar = req.file.buffer;
+    await req.user.save();
+    res.send("Uploaded")
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message });
+});
+
+router.delete("/users/me/avatar", auth, async (req, res) => {
+    try {
+        req.user.avatar = undefined;
+        await req.user.save();
+        res.status(200).send("Avatar Deleted");
+    } catch (error) {
+        res.status(500).send({ error: "Something went wrong, please check your connection" });
+    }
+
+});
+
+// GET avatar by user ID
+router.get("/users/:id/avatar", async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user || !user.avatar) {
+            throw new Error();
+        }
+        res.set("Content-Type", "image/jpg");
+        res.send(user.avatar);
+    } catch (error) {
+        res.status(400).send();
+    }
+});
+
+
+
+// <img src="data:image/jpg;base64," />
 
 module.exports = router;
