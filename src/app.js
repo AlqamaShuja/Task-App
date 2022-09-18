@@ -49,3 +49,6 @@ const main = async (req, res) => {
 
 // npm i bcryptjs
 // npm i jsonwebtoken
+// 12345678@9422898530Alq
+// Sendinblue API
+// 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

@@ -4,11 +4,13 @@ const sharp = require("sharp");
 const User = require("../model/user");
 const router = new express.Router();
 const auth = require("../middleware/auth");
+const { sendWelcomeEmail, cancelMessage } = require("../emails/account");
 
 router.post("/users", async (req, res) => {
     try {
         const user = new User(req.body);
         await user.save();
+        sendWelcomeEmail(user.email, user.name);
         const token = await user.generateAuthToken();
         res.status(201).send({ user, token });
     }
@@ -84,6 +86,7 @@ router.delete("/users/me", auth, async (req, res) => {
         //     return res.status(404).send({ error: "User with given id is not found." });
         // }
         await req.user.remove();
+        cancelMessage(req.user.email, req.user.name);
         res.send(req.user);
     } catch (error) {
         res.status(500).send();
