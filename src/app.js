@@ -11,34 +11,6 @@ const app = express();
 const port = process.env.port || 3000;
 
 
-const multer = require("multer");
-
-const upload = multer({
-    dest: 'images',
-    limits: {
-        fileSize: 1000000   //1 MegaByte
-    },
-    fileFilter(req, file, cb) {
-        // cb(new Error("File must be a PDF"));
-        // cb(undefined, true);
-        // cb(undefined, false);
-        if (!file.originalname.match(/\.(doc|docx)$/)) {
-            return cb(new Error("Please upload a doc or docx file"));
-        }
-        cb(undefined, true);
-    }
-});
-
-const errorMiddleware = (req, res, next) => {
-    throw new Error("From my middleware");
-}
-app.post("/upload", upload.single("upload"), (req, res) => {
-    res.send("Uploaded");
-}, (error, req, res, next) => {
-    res.status(400).send({ error: error.message });
-});
-
-
 // Middlewares
 // app.use((req, res, next) => {
 //     if (req.method === "GET") {
