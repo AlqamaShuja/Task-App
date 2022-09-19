@@ -8,7 +8,7 @@ const Task = require("./model/task");
 const User = require("./model/user");
 
 const app = express();
-const port = process.env.port;
+const port = process.env.PORT;
 
 
 // Middlewares
